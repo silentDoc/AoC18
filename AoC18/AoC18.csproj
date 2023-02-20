@@ -7,4 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Input\" />
+    <Folder Include="Day01\" />
+  </ItemGroup>
+
 </Project>
