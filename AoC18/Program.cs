@@ -8,7 +8,7 @@ namespace AoC18
         {
             int day = 1;
             int part = 1;
-            bool test = !false;
+            bool test = false;
 
             string input = "./Input/day" + day.ToString("00");
             input += (test) ? "_test.txt" : ".txt";
@@ -28,7 +28,11 @@ namespace AoC18
 
         static int day1(string input, int part)
         {
-            return 0;
+            var lines = File.ReadAllLines(input).ToList();
+            Day01.DeviceCalibrator dc = new();
+            dc.ParseInput(lines);
+
+            return dc.Solve(part);
         }
     }
 }
