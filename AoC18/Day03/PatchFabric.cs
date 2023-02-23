@@ -13,6 +13,7 @@ namespace AoC18.Day03
     internal class PatchFabric
     {
         List<Patch> patches = new();
+        HashSet<int> overlapId = new();
 
         void ParseLine(string line)
         {
@@ -28,26 +29,42 @@ namespace AoC18.Day03
         public void ParseInput(List<string> lines)
             => lines.ForEach(x => ParseLine(x));
 
-        void FillPositions(Patch patch, Dictionary<Coord2D, int> positions)
+        void FillPositions(Patch patch, Dictionary<Coord2D, int> positions, int part =1)
         {
             for (int i = patch.Pos.x; i < patch.Pos.x + patch.Size.x; i++)
                 for (int j = patch.Pos.y; j < patch.Pos.y + patch.Size.y; j++)
                 {
                     var current = new Coord2D(i, j);
-                    if (!positions.ContainsKey(current))
-                        positions[current] = 0;
-                    positions[current]++;
+
+                    if (part == 1)
+                    {
+                        if (!positions.ContainsKey(current))
+                            positions[current] = 0;
+                        positions[current]++;
+                    }
+                    else
+                    {
+                        if (!positions.ContainsKey(current))
+                            positions[current] = part == 1 ? 0 : patch.Id;
+                        else
+                        {
+                            overlapId.Add(positions[current]);
+                            overlapId.Add(patch.Id);
+                            positions[current] = patch.Id;
+                        }
+                    }
                 }
         }
 
-        int FindOverlap()
+        int FindOverlap(int part =1)
         {
             Dictionary<Coord2D, int> positions = new();
-            patches.ForEach(x => FillPositions(x, positions));
-            return positions.Values.Count(x => x > 1);
+            patches.ForEach(x => FillPositions(x, positions, part));
+            return part == 1 ? positions.Values.Count(x => x > 1) 
+                             : patches.Select(x => x.Id).Where(i => !overlapId.Contains(i)).First();
         }
 
         public int Solve(int part = 1)
-            => FindOverlap();
+            => FindOverlap(part);
     }
 }
