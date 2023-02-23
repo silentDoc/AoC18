@@ -1,4 +1,4 @@
-﻿namespace AoC17.Common
+﻿namespace AoC18.Common
 {
     public class Coord2D : IEquatable<Coord2D>
     {
