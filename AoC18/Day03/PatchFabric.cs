@@ -13,15 +13,15 @@ namespace AoC18.Day03
     internal class PatchFabric
     {
         List<Patch> patches = new();
-        HashSet<int> overlapId = new();
+        HashSet<int> overlaps = new();
 
         void ParseLine(string line)
         {
             Regex regex = new Regex(@"#(\d+) @ (\d+),(\d+): (\d+)x(\d+)");
-            Match match = regex.Match(line);
-            int id = int.Parse(match.Groups[1].Value);
-            Coord2D pos = new Coord2D(int.Parse(match.Groups[2].Value), int.Parse(match.Groups[3].Value));
-            Coord2D size = new Coord2D(int.Parse(match.Groups[4].Value), int.Parse(match.Groups[5].Value));
+            var groups = regex.Match(line).Groups;
+            int id = int.Parse(groups[1].Value);
+            Coord2D pos = new Coord2D(int.Parse(groups[2].Value), int.Parse(groups[3].Value));
+            Coord2D size = new Coord2D(int.Parse(groups[4].Value), int.Parse(groups[5].Value));
 
             Patch patch = new Patch() { Id = id, Pos = pos, Size = size };
             patches.Add(patch);
@@ -36,22 +36,16 @@ namespace AoC18.Day03
                 {
                     var current = new Coord2D(i, j);
 
-                    if (part == 1)
-                    {
-                        if (!positions.ContainsKey(current))
-                            positions[current] = 0;
-                        positions[current]++;
-                    }
+                    if (!positions.ContainsKey(current))
+                        positions[current] = part == 1 ? 1 : patch.Id;
                     else
                     {
-                        if (!positions.ContainsKey(current))
-                            positions[current] = part == 1 ? 0 : patch.Id;
-                        else
+                        if (part == 2)
                         {
-                            overlapId.Add(positions[current]);
-                            overlapId.Add(patch.Id);
-                            positions[current] = patch.Id;
+                            overlaps.Add(positions[current]);
+                            overlaps.Add(patch.Id);
                         }
+                        positions[current] = part == 1 ? positions[current] + 1 : patch.Id;
                     }
                 }
         }
@@ -61,7 +55,7 @@ namespace AoC18.Day03
             Dictionary<Coord2D, int> positions = new();
             patches.ForEach(x => FillPositions(x, positions, part));
             return part == 1 ? positions.Values.Count(x => x > 1) 
-                             : patches.Select(x => x.Id).Where(i => !overlapId.Contains(i)).First();
+                             : patches.Select(x => x.Id).Where(i => !overlaps.Contains(i)).First();
         }
 
         public int Solve(int part = 1)
