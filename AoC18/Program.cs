@@ -6,9 +6,9 @@ namespace AoC18
     {
         static void Main(string[] args)
         {
-            int day = 4;
-            int part = 2;
-            bool test = false;
+            int day = 5;
+            int part = 1;
+            bool test = !false;
 
             string input = "./Input/day" + day.ToString("00");
             input += (test) ? "_test.txt" : ".txt";
@@ -22,6 +22,7 @@ namespace AoC18
                 2 => day2(input, part).ToString(),
                 3 => day3(input, part).ToString(),
                 4 => day4(input, part).ToString(),
+                5 => day5(input, part).ToString(),
                 _ => throw new ArgumentException("Wrong day number - unimplemented")
             };
             st.Stop();
@@ -60,6 +61,12 @@ namespace AoC18
             watcher.ParseInput(lines);
           
             return watcher.Solve(part);
+        }
+
+        static int day5(string input, int part)
+        {
+            var lines = File.ReadAllLines(input).ToList();
+            return 0;
         }
     }
 }
