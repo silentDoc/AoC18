@@ -18,8 +18,11 @@
         public int SleepTime
             => WakeUp.Zip(FallAsleep, (w, f) => w.Subtract(f).Minutes).Sum();
 
-        public int MostLikelyMinute()
+        public (int which, int howmuch) MostLikelyMinute()
         {
+            if (FallAsleep.Count == 0)
+                return (0, 0);
+
             Dictionary<int, int> sleepMap = new();
             for (int i = 0; i < FallAsleep.Count; i++)
                 for (int m = FallAsleep[i].Minute; m < WakeUp[i].Minute; m++)
@@ -28,7 +31,7 @@
                         sleepMap[m] = 0;
                     sleepMap[m]++;
                 }
-            return sleepMap.Keys.Where(x => sleepMap[x] == sleepMap.Values.Max()).First();
+            return (sleepMap.Keys.Where(x => sleepMap[x] == sleepMap.Values.Max()).First(), sleepMap.Values.Max());
         }
 
     }
@@ -69,14 +72,23 @@
             }
         }
 
-        int CalcPart1()
+        int Calculate(int part = 1)
         {
-            var maxSleep = guards.Max(x => x.SleepTime);
-            var guard = guards.First(x => x.SleepTime == maxSleep);
-            return guard.Id * guard.MostLikelyMinute();
+            if (part == 1)
+            {
+                var maxSleep = guards.Max(x => x.SleepTime);
+                var guard = guards.First(x => x.SleepTime == maxSleep);
+                return guard.Id * guard.MostLikelyMinute().which;
+            }
+
+            var mostSlept = guards.Select(x => x.MostLikelyMinute()).ToList();
+            var amount = mostSlept.Max(x => x.howmuch);
+            var guard_p2 = guards.First(x => x.MostLikelyMinute().howmuch == amount);
+
+            return guard_p2.Id * guard_p2.MostLikelyMinute().which;
         }
 
         public int Solve(int part = 1)
-            => CalcPart1();
+            => Calculate(part);
     }
 }
