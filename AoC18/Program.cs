@@ -7,7 +7,7 @@ namespace AoC18
         static void Main(string[] args)
         {
             int day = 5;
-            int part = 1;
+            int part = 2;
             bool test = false;
 
             string input = "./Input/day" + day.ToString("00");

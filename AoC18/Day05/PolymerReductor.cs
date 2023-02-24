@@ -30,7 +30,24 @@ namespace AoC18.Day05
             return sb.Length;
         }
 
-       public int Solve(int part = 1)
-            => part == 1 ? Reduce(polymer): 0;
+        int Optimize()
+        {
+            string strChars = "abcdefghijklmnopqrstuvwxyz";
+            string polymer_copy = polymer;
+            var min_len = int.MaxValue;
+
+            foreach (char c in strChars)
+            {
+                StringBuilder sb = new(polymer);
+                sb = sb.Replace(c.ToString(), "").Replace(char.ToUpper(c).ToString(), "");
+
+                var len = Reduce(sb.ToString());
+                min_len = min_len > len ? len : min_len;
+            }
+            return min_len;
+        }
+
+        public int Solve(int part = 1)
+            => part == 1 ? Reduce(polymer): Optimize();
     }
 }
