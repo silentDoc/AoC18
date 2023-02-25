@@ -18,7 +18,7 @@ namespace AoC18.Day06
         List<(Coord2D position, int distance)> GetDistances(Coord2D position)
             => locations.Select((x, a) => (x, x.Manhattan(position))).ToList();
 
-        int LargestArea()
+        int LargestArea(int part=1)
         {
             var minX = locations.Min(c => c.x);
             var maxX = locations.Max(c => c.x);
@@ -47,10 +47,20 @@ namespace AoC18.Day06
                         amountOfClosests[closestLocation]++;
                     }
                 }
-            return amountOfClosests.Where(x => !infinityPoints.Contains(x.Key)).Max(x => x.Value);
+            if(part==1)
+                return amountOfClosests.Where(x => !infinityPoints.Contains(x.Key)).Max(x => x.Value);
+
+            // Part 2
+            var safePositionCounter = 0;
+
+            for (int x = minX; x <= maxX; x++)
+                for (int y = minY; y <= maxY; y++)
+                    safePositionCounter += locations.Sum(p => p.Manhattan(new Coord2D(x, y))) < 10000 ? 1 : 0;
+
+            return safePositionCounter;
         }
 
         public int Solve(int part = 1)
-            => LargestArea();
+            => LargestArea(part);
     }
 }
