@@ -25,6 +25,17 @@ namespace AoC18.Day06
             var minY = locations.Min(c => c.y);
             var maxY = locations.Max(c => c.y);
 
+            if (part == 2)
+            {
+                var safePositionCounter = 0;
+                for (int x = minX; x <= maxX; x++)
+                    for (int y = minY; y <= maxY; y++)
+                        safePositionCounter += locations.Sum(p => p.Manhattan(new Coord2D(x, y))) < 10000 ? 1 : 0;
+
+                return safePositionCounter;
+            }
+
+            // Part 1
             HashSet<Coord2D> infinityPoints = new();
             Dictionary<Coord2D, int> amountOfClosests = new();
 
@@ -47,17 +58,7 @@ namespace AoC18.Day06
                         amountOfClosests[closestLocation]++;
                     }
                 }
-            if(part==1)
-                return amountOfClosests.Where(x => !infinityPoints.Contains(x.Key)).Max(x => x.Value);
-
-            // Part 2
-            var safePositionCounter = 0;
-
-            for (int x = minX; x <= maxX; x++)
-                for (int y = minY; y <= maxY; y++)
-                    safePositionCounter += locations.Sum(p => p.Manhattan(new Coord2D(x, y))) < 10000 ? 1 : 0;
-
-            return safePositionCounter;
+            return amountOfClosests.Where(x => !infinityPoints.Contains(x.Key)).Max(x => x.Value);
         }
 
         public int Solve(int part = 1)
