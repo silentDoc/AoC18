@@ -4,16 +4,10 @@
     {
         public List<Node> children = new();
         public List<int> metadata = new();
-        public int Value()
-        {
-            if (children.Count() == 0)
-                return metadata.Sum();
-            else
-            {
-                var interesting = metadata.Select(x => x - 1).Where(y => y >= 0 && y < children.Count()).ToList();
-                return interesting.Sum(i => children[i].Value());
-            }
-        }
+        public int Value
+            => children.Count == 0 ? metadata.Sum()
+                                   : metadata.Where(y => y >= 1 && y <= children.Count())
+                                             .Sum(i => children[i - 1].Value);
     }
 
     internal class TreeParser
@@ -48,7 +42,7 @@
             var index = 0;
             var root = ParseNode(ref index);
             tree.Add(root);
-            return part == 1 ? tree.Sum(x => x.metadata.Sum()) : root.Value();
+            return part == 1 ? tree.Sum(x => x.metadata.Sum()) : root.Value;
         }
 
         public int Solve(int part = 1)
