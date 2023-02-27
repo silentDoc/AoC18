@@ -4,8 +4,16 @@
     {
         public List<Node> children = new();
         public List<int> metadata = new();
-        public int MetadataSum
-            => metadata.Sum();
+        public int Value()
+        {
+            if (children.Count() == 0)
+                return metadata.Sum();
+            else
+            {
+                var interesting = metadata.Select(x => x - 1).Where(y => y >= 0 && y < children.Count()).ToList();
+                return interesting.Sum(i => children[i].Value());
+            }
+        }
     }
 
     internal class TreeParser
@@ -15,7 +23,6 @@
 
         public void ParseInput(List<string> lines)
             => inputData = lines[0].Split(" ").Select(x => int.Parse(x)).ToList();
-
 
         Node ParseNode(ref int index)
         {
@@ -36,14 +43,15 @@
             return currentNode;
         }
 
-        int FindSum()
+        int FindSum(int part = 1)
         {
             var index = 0;
-            tree.Add(ParseNode(ref index));
-            return tree.Sum(x => x.MetadataSum);
+            var root = ParseNode(ref index);
+            tree.Add(root);
+            return part == 1 ? tree.Sum(x => x.metadata.Sum()) : root.Value();
         }
 
         public int Solve(int part = 1)
-            => FindSum();
+            => FindSum(part);
     }
 }
