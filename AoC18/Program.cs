@@ -8,7 +8,7 @@ namespace AoC18
         {
             int day = 9;
             int part = 1;
-            bool test = !false;
+            bool test = false;
 
             string input = "./Input/day" + day.ToString("00");
             input += (test) ? "_test.txt" : ".txt";
@@ -104,7 +104,10 @@ namespace AoC18
         static int day9(string input, int part)
         {
             var lines = File.ReadAllLines(input).ToList();
-            return 0;
+            Day09.MarbleGame marbleGame = new();
+            marbleGame.ParseInput(lines);
+
+            return marbleGame.Solve(part);
         }
     }
 }
