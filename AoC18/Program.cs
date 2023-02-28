@@ -6,9 +6,9 @@ namespace AoC18
     {
         static void Main(string[] args)
         {
-            int day = 8;
-            int part = 2;
-            bool test = false;
+            int day = 9;
+            int part = 1;
+            bool test = !false;
 
             string input = "./Input/day" + day.ToString("00");
             input += (test) ? "_test.txt" : ".txt";
@@ -26,6 +26,7 @@ namespace AoC18
                 6 => day6(input, part).ToString(),
                 7 => day7(input, part).ToString(),
                 8 => day8(input, part).ToString(),
+                9 => day9(input, part).ToString(),
                 _ => throw new ArgumentException("Wrong day number - unimplemented")
             };
             st.Stop();
@@ -98,6 +99,12 @@ namespace AoC18
             Day08.TreeParser treeParser = new();
             treeParser.ParseInput(lines);
             return treeParser.Solve(part);
+        }
+
+        static int day9(string input, int part)
+        {
+            var lines = File.ReadAllLines(input).ToList();
+            return 0;
         }
     }
 }
