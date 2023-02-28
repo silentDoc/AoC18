@@ -1,62 +1,15 @@
 ﻿namespace AoC18.Day09
 {
-    class Game_Part1
-    {
-        // Just left here to see differences between part 1 and part 2
-        public int NumPlayers = 0;
-        public int LastMarble = 0;
-        int currentMarble = 0;
-        List<int> MarbleCircle = new();
-        Dictionary<int, List<int>> PlayerScores = new();
-
-        void InsertMarble(int value)
-        {
-            if(MarbleCircle.Count ==0)
-                MarbleCircle.Add(0);
-
-            if (value % 23 ==0)
-            {
-                int player = (value % NumPlayers);
-                if (!PlayerScores.ContainsKey(player))
-                    PlayerScores[player] = new();
-                PlayerScores[player].Add(value);
-
-                currentMarble = ((currentMarble - 7) + MarbleCircle.Count) % MarbleCircle.Count;    // Avoids negative mod
-                PlayerScores[player].Add(MarbleCircle[currentMarble]);
-                MarbleCircle.RemoveAt(currentMarble);
-
-                if (currentMarble == MarbleCircle.Count)
-                    currentMarble = 0;
-                return;
-            }
-            
-            var two_away = (currentMarble + 2) % MarbleCircle.Count;
-            MarbleCircle.Insert(two_away, value);
-            currentMarble = two_away;
-            return;
-        }
-
-        public int SiumlateGame()
-        {
-            for (int i = 1; i <= LastMarble; i++)
-                InsertMarble(i);
-
-            var scores = PlayerScores.Values.Select(x => x.Sum());
-            return scores.Max();
-        }
-    }
-
     class CirclePosition
     {
         public long Value = 0;
-        public CirclePosition? Left = null;     // using new() causes a stackoverflow :)
+        public CirclePosition? Left = null;    
         public CirclePosition? Right = null;
     }
 
     #pragma warning disable CS8602
     class Game
     {
-        // Part 2 makes the use of Lists unfeasable, we have to use a faster approach - we will make use of linked lists
         public long NumPlayers;
         public long LastMarble;
         Dictionary<long, long> PlayerScores = new();
