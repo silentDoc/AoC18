@@ -8,7 +8,7 @@ namespace AoC18
         {
             int day = 10;
             int part = 1;
-            bool test = !false;
+            bool test = false;
 
             string input = "./Input/day" + day.ToString("00");
             input += (test) ? "_test.txt" : ".txt";
@@ -27,6 +27,7 @@ namespace AoC18
                 7 => day7(input, part).ToString(),
                 8 => day8(input, part).ToString(),
                 9 => day9(input, part).ToString(),
+                10 => day10(input, part).ToString(),
                 _ => throw new ArgumentException("Wrong day number - unimplemented")
             };
             st.Stop();
@@ -113,7 +114,10 @@ namespace AoC18
         static string day10(string input, int part)
         {
             var lines = File.ReadAllLines(input).ToList();
-            return "";
+            Day10.MessageBuilder msgBuilder = new();
+            msgBuilder.ParseInput(lines);
+
+            return msgBuilder.Solve(part);
         }
     }
 }
