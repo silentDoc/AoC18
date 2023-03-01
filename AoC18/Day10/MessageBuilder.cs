@@ -71,35 +71,30 @@ namespace AoC18.Day10
                 var pixelsInRow = pixels.Where(p => p.Position.y == tl.y + row).ToList();
                 foreach (var p in pixelsInRow)
                 {
-                    var pixelX = p.Position.x - tl.x;
-                    if (pixelX < nCols && pixelX>=0)
-                        sb[pixelX] = '#';
+                    var strCol = p.Position.x - tl.x;
+                    if (strCol < nCols && strCol>=0)
+                        sb[strCol] = '#';
                 }
                 lines.Add(sb.ToString());
             }
             lines.ForEach(Console.WriteLine);
         }
 
-        void FastForward(int numSeconds)
-            => pixels.ForEach(x => x.Update(numSeconds));
-
         string MoveMessage(int part = 1)
         {
-            int seconds = 9980;         // Assign to 0 for test data and comment FastForward below
-            FastForward(seconds);       // So we do not wait that long (based on the input). Comment for test data
-            long area = long.MaxValue;
+            int seconds = 9980;                           // FastForwad - Assign to 0 for test data and comment FastForward below
+            pixels.ForEach(x => x.Update(seconds));       // So we do not wait that long (based on the input). Comment for test data
+            int area = int.MaxValue;
             bool keepLooking = true;
             while (keepLooking)
             {
+                seconds++;
                 pixels.ForEach(x => x.Update());
                 var (tl, br) = FindWindow();
 
-                long tmp = Math.Abs( ((long)(br.x - tl.x)) * ((long)(br.y - tl.y)));
-                if (tmp < area)
-                    area = tmp;
-                else
-                    keepLooking = false;
-                seconds++;
+                int tmp = Math.Abs( (br.x - tl.x) * (br.y - tl.y) );
+                keepLooking = (tmp < area);
+                area = tmp;
             }
             seconds--;
             pixels.ForEach(x => x.Update(-1));
