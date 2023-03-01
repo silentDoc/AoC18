@@ -6,7 +6,7 @@ namespace AoC18
     {
         static void Main(string[] args)
         {
-            int day = 10;
+            int day = 11;
             int part = 1;
             bool test = false;
 
@@ -121,10 +121,12 @@ namespace AoC18
             return msgBuilder.Solve(part);
         }
 
-        static int day11(string input, int part)
+        static string day11(string input, int part)
         {
             var lines = File.ReadAllLines(input).ToList();
-            return 0;
+            Day11.CellInspector inspector = new();
+            inspector.ParseInput(lines);
+            return inspector.Solve(part);
         }
     }
 }
