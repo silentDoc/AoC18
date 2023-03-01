@@ -85,7 +85,8 @@ namespace AoC18.Day10
 
         string MoveMessage(int part = 1)
         {
-            FastForward(9980);
+            int seconds = 9980;         // Assign to 0 for test data and comment FastForward below
+            FastForward(seconds);       // So we do not wait that long (based on the input). Comment for test data
             long area = long.MaxValue;
             bool keepLooking = true;
             while (keepLooking)
@@ -98,11 +99,13 @@ namespace AoC18.Day10
                     area = tmp;
                 else
                     keepLooking = false;
+                seconds++;
             }
+            seconds--;
             pixels.ForEach(x => x.Update(-1));
             RenderSky();
 
-            return "";
+            return seconds.ToString();
         }
 
         public string Solve(int part = 1)
