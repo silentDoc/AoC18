@@ -29,6 +29,7 @@ namespace AoC18
                 9 => day9(input, part).ToString(),
                 10 => day10(input, part).ToString(),
                 11 => day11(input, part).ToString(),
+                12 => day12(input, part).ToString(),
                 _ => throw new ArgumentException("Wrong day number - unimplemented")
             };
             st.Stop();
@@ -128,5 +129,12 @@ namespace AoC18
             inspector.ParseInput(lines);
             return inspector.Solve(part);
         }
+
+        static int day12(string input, int part)
+        {
+            var lines = File.ReadAllLines(input).ToList();
+            return 0;
+        }
+
     }
 }
