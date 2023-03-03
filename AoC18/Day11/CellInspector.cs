@@ -117,7 +117,49 @@ namespace AoC18.Day11
             return maxPos.Item1.ToString() + "," + maxPos.Item2.ToString() + "," + maxPos.Item3.ToString();
         }
 
-       
+        // Try to optimize using Integral images :) ( https://en.wikipedia.org/wiki/Summed-area_table )
+        string FindAnySizeOpt2(Dictionary<(int x, int y), int> cells)
+        {
+            Dictionary<(int x, int y), int> integralImage = new();
+            integralImage[(1, 1)] = cells[(1, 1)];
+            for (var i = 2; i <= 300; i++)
+            {
+                integralImage[(i, 1)] = integralImage[(i-1, 1)] - cells[(i, 1)];
+                integralImage[(1, i)] = integralImage[(1, i-1)] - cells[(1, i)];
+            }
+
+            for (var x = 2; x <= 300; x++)
+                for (var y = 2; y <= 300; y++)
+                    integralImage[(x, y)] = cells[(x, y)] + integralImage[(x, y - 1)] 
+                                                          + integralImage[(x - 1, y)] 
+                                                          - integralImage[(x - 1, y - 1)];
+
+            var maxVal = 0;
+            var maxPos = (0, 0, 1);
+
+            for (var x = 1; x <= 300; x++)
+                for (var y = 1; y <= 300; y++)
+                {
+                    int maxLength = Math.Min(300 - x, 300 - y);
+                    for (var side = 1; side <= maxLength; side++)
+                    {
+                        var topLeft = (x, y);
+                        var bottomLeft = (x, y+side-1);
+                        var topRight = (x + side - 1, y);
+                        var bottomRight = (x + side - 1, y + side - 1);
+
+                        var result = integralImage[bottomRight] - integralImage[topRight] - integralImage[bottomLeft] + integralImage[topLeft];
+
+                        if (result > maxVal)
+                        {
+                            maxVal = result;
+                            maxPos = (x, y, side);
+                        }
+                    }
+                }
+            
+            return (maxPos.Item1+1).ToString() + "," + (maxPos.Item2+1).ToString() + "," + (maxPos.Item3 -1).ToString();
+        }
 
         string FindSquare(int part = 1)
         {
@@ -131,7 +173,7 @@ namespace AoC18.Day11
                     cells[pos] = CalculateValue(pos, serial);
                 }
 
-            return part == 1 ? Find3x3Cell(cells) : FindAnySizeOpt(cells);
+            return part == 1 ? Find3x3Cell(cells) : FindAnySizeOpt2(cells);
         }
 
         public string Solve(int part = 1)
