@@ -1,5 +1,6 @@
 ﻿using AoC18.Common;
 using MoreLinq;
+using System.Drawing;
 
 namespace AoC18.Day11
 {
@@ -22,7 +23,7 @@ namespace AoC18.Day11
             return power - 5;
         }
 
-        string Find3x3Cell(Dictionary<Coord2D, int> cells)
+        string Find3x3Cell(Dictionary<(int x, int y), int> cells)
         {
             Dictionary<Coord2D, int> squares = new();
             for (var x = 2; x <= 299; x++)
@@ -34,13 +35,13 @@ namespace AoC18.Day11
                     squares[center] = powerLevel;
                 }
             var maxPowerLevel = squares.Values.Max();
-            var posCenter = squares.Keys.First(x => squares[x] == maxPowerLevel);
+            Coord2D posCenter = squares.Keys.First(x => squares[x] == maxPowerLevel);
             posCenter -= new Coord2D(1, 1); // We have the square center, we want the top left
 
             return posCenter.ToString();
         }
 
-        int CalcSquare(Dictionary<Coord2D, int> cells, Coord2D pos, int size)
+        int CalcSquare(Dictionary<(int x, int y), int> cells, Coord2D pos, int size)
         {
             var key = (pos.x, pos.y, size);
 
@@ -60,7 +61,7 @@ namespace AoC18.Day11
             return allSizeSquares[key];
         }
 
-        string FindAnySize(Dictionary<Coord2D, int> cells)
+        string FindAnySize(Dictionary<(int x, int y), int> cells)
         {
             var maxVal = 0;
             var maxPos = (0, 0, 1);
@@ -82,19 +83,55 @@ namespace AoC18.Day11
             return maxPos.Item1.ToString() + "," + maxPos.Item2.ToString() + "," + maxPos.Item3.ToString();
         }
 
+        string FindAnySizeOpt(Dictionary<(int x, int y), int> cells)
+        {
+            var maxVal = 0;
+            var maxPos = (0, 0, 1);
+            var previous = 0;
+
+            for (var x = 1; x <= 300; x++)
+                for (var y = 1; y <= 300; y++)
+                {
+                    int maxLength = Math.Min(300 - x, 300 - y); 
+                    for (var side = 1; side <= maxLength; side++)
+                    {
+                        var result = 0;
+                        if (side == 1)
+                            result = cells[(x, y)];
+                        else
+                        {
+                            result += previous;
+                            var offset = side - 1;
+                            result += Enumerable.Range(x, side).Sum(p => cells[(p, y + offset)]);
+                            result += Enumerable.Range(y, side - 1).Sum(p => cells[(x + offset, p)]);
+                        }
+                        previous = result;
+
+                        if (result > maxVal)
+                        {
+                            maxVal = result;
+                            maxPos = (x, y, side);
+                        }
+                    }
+                }
+            return maxPos.Item1.ToString() + "," + maxPos.Item2.ToString() + "," + maxPos.Item3.ToString();
+        }
+
+       
+
         string FindSquare(int part = 1)
         {
-            Dictionary<Coord2D, int> cells = new();
+            Dictionary<(int x, int y), int> cells = new();
             
 
             for(var x = 1; x<=300; x++)
                 for (var y = 1; y <= 300; y++)
                 {
-                    var pos = new Coord2D(x, y);
+                    var pos = (x, y);
                     cells[pos] = CalculateValue(pos, serial);
                 }
 
-            return part == 1 ? Find3x3Cell(cells) : FindAnySize(cells);
+            return part == 1 ? Find3x3Cell(cells) : FindAnySizeOpt(cells);
         }
 
         public string Solve(int part = 1)
