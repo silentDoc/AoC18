@@ -6,8 +6,8 @@ namespace AoC18
     {
         static void Main(string[] args)
         {
-            int day = 11;
-            int part = 2;
+            int day = 12;
+            int part = 1;
             bool test = false;
 
             string input = "./Input/day" + day.ToString("00");
@@ -133,7 +133,9 @@ namespace AoC18
         static int day12(string input, int part)
         {
             var lines = File.ReadAllLines(input).ToList();
-            return 0;
+            Day12.FlowerPot pots = new();
+            pots.ParseInput(lines);
+            return pots.Solve(part);
         }
 
     }
