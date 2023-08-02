@@ -2,6 +2,13 @@
 
 namespace AoC18.Day12
 {
+    class FlowerState
+    {
+        public string pots = "";
+        public long left = 0;
+    }
+
+
     internal class FlowerPot
     {
         Dictionary<string, string> rules = new();
@@ -20,50 +27,50 @@ namespace AoC18.Day12
             lines.Skip(2).ToList().ForEach(ParseLine);
         }
 
-        int AdvanceGeneration(string currentGen, out string nextGen)
+        FlowerState Grow(FlowerState state)
         {
-            StringBuilder sb = new();
-            var current = "...." + currentGen + "....";
-            int newStartPosition = -1;
-
-            for (int i = 0; i < current.Length - windowWidth; i++)
+            var pots = "....." + state.pots + ".....";
+            var newPots = "";
+            for (var i = 2; i < pots.Length - 2; i++)
             {
-                var group = current.Substring(i, windowWidth);
-                var newChar = rules.ContainsKey(group) ? rules[group] : ".";
+                var x = pots.Substring(i - 2, 5);
+                newPots += rules.TryGetValue(x, out var ch) ? ch : ".";
+            }
 
-                if (sb.Length != 0)
-                    sb.Append(newChar);
-                else if (newChar == "#")
+            var firstFlower = newPots.IndexOf("#");
+            var newLeft = firstFlower + state.left - 3;
+
+            newPots = newPots.Substring(firstFlower);
+            newPots = newPots.Substring(0, newPots.LastIndexOf("#") + 1);
+            return  new FlowerState { left = newLeft, pots = newPots };
+        }
+
+        long GrowGenerations(long numGenerations)
+        {
+            long dif_leftPos = 0;
+            //long currentGen = 0;
+            FlowerState currentState = new FlowerState { left = 0, pots = initialState };
+
+            while (numGenerations > 0)
+            {
+                var prevState = currentState;
+                currentState = Grow(currentState);
+
+                numGenerations--;
+                dif_leftPos = currentState.left - prevState.left;
+
+                if (currentState.pots == prevState.pots)
                 {
-                    newStartPosition = i - 2;
-                    sb.Append(newChar);
+                    currentState = new FlowerState { left = currentState.left + numGenerations * dif_leftPos, pots = currentState.pots };
+                    break;
                 }
             }
 
-            nextGen = sb.ToString();
-            return newStartPosition;
+            return Enumerable.Range(0, currentState.pots.Length).Select(i => currentState.pots[i] == '#' ? i + currentState.left : 0).Sum();
         }
 
-        int GrowGenerations(int numGenerations, int part = 1)
-        {
-            var zeroOffset = 0;
-            string next = "";
-            string current = initialState;
 
-            for (int gen = 0; gen < numGenerations; gen++)
-            {
-                zeroOffset += AdvanceGeneration(current, out next);
-                current = next;
-            }
-
-            var pots = current.ToArray().Select((pot, index) => new { pot, index}).Where(x => x.pot == '#').ToList();
-            var realIndices = pots.Select(x => x.index + zeroOffset).ToList();
-            var retVal = realIndices.Sum();
-
-            return retVal;
-        }
-
-        public int Solve(int part = 1)
-            => GrowGenerations(20, part);
+        public long Solve(int part = 1)
+            => GrowGenerations(part == 1 ? 20L : 50000000000L);
     }
 }

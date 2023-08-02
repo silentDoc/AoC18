@@ -7,7 +7,7 @@ namespace AoC18
         static void Main(string[] args)
         {
             int day = 12;
-            int part = 1;
+            int part = 2;
             bool test = false;
 
             string input = "./Input/day" + day.ToString("00");
@@ -130,7 +130,7 @@ namespace AoC18
             return inspector.Solve(part);
         }
 
-        static int day12(string input, int part)
+        static long day12(string input, int part)
         {
             var lines = File.ReadAllLines(input).ToList();
             Day12.FlowerPot pots = new();
