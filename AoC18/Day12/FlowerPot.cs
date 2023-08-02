@@ -1,13 +1,10 @@
-﻿using System.Text;
-
-namespace AoC18.Day12
+﻿namespace AoC18.Day12
 {
     class FlowerState
     {
         public string pots = "";
         public long left = 0;
     }
-
 
     internal class FlowerPot
     {
@@ -18,7 +15,7 @@ namespace AoC18.Day12
         void ParseLine(string line)
         {
             var elements = line.Split("=>", StringSplitOptions.TrimEntries).ToList();
-            rules[elements[0]] =elements[1];
+            rules[elements[0]] = elements[1];
         }
 
         public void ParseInput(List<string> lines)
@@ -42,13 +39,12 @@ namespace AoC18.Day12
 
             newPots = newPots.Substring(firstFlower);
             newPots = newPots.Substring(0, newPots.LastIndexOf("#") + 1);
-            return  new FlowerState { left = newLeft, pots = newPots };
+            return new FlowerState { left = newLeft, pots = newPots };
         }
 
         long GrowGenerations(long numGenerations)
         {
             long dif_leftPos = 0;
-            //long currentGen = 0;
             FlowerState currentState = new FlowerState { left = 0, pots = initialState };
 
             while (numGenerations > 0)
