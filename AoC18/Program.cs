@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using AoC18.Day14;
+using System.Diagnostics;
 
 namespace AoC18
 {
@@ -8,7 +9,7 @@ namespace AoC18
         {
             int day = 14;
             int part = 1;
-            bool test = !false;
+            bool test = false;
 
             string input = "./Input/day" + day.ToString("00");
             input += (test) ? "_test.txt" : ".txt";
@@ -31,6 +32,7 @@ namespace AoC18
                 11 => day11(input, part).ToString(),
                 12 => day12(input, part).ToString(),
                 13 => day13(input, part).ToString(),
+                14 => day14(input, part).ToString(),
                 _ => throw new ArgumentException("Wrong day number - unimplemented")
             };
             st.Stop();
@@ -151,8 +153,10 @@ namespace AoC18
         static string day14(string input, int part)
         {
             var lines = File.ReadAllLines(input).ToList();
+            RecipeFinder finder = new();
+            finder.ParseInput(lines);
 
-            return "";
+            return finder.Solve(part);
         }
 
     }
