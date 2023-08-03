@@ -1,5 +1,4 @@
-﻿using AoC18.Day14;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace AoC18
 {
@@ -8,7 +7,7 @@ namespace AoC18
         static void Main(string[] args)
         {
             int day = 14;
-            int part = 1;
+            int part = 2;
             bool test = false;
 
             string input = "./Input/day" + day.ToString("00");
@@ -153,7 +152,7 @@ namespace AoC18
         static string day14(string input, int part)
         {
             var lines = File.ReadAllLines(input).ToList();
-            RecipeFinder finder = new();
+            Day14.RecipeFinder finder = new();
             finder.ParseInput(lines);
 
             return finder.Solve(part);
