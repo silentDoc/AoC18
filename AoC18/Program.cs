@@ -6,9 +6,9 @@ namespace AoC18
     {
         static void Main(string[] args)
         {
-            int day = 14;
-            int part = 2;
-            bool test = false;
+            int day = 15;
+            int part = 1;
+            bool test = !false;
 
             string input = "./Input/day" + day.ToString("00");
             input += (test) ? "_test.txt" : ".txt";
@@ -18,20 +18,21 @@ namespace AoC18
             st.Start();
             string result = day switch
             {
-                1 => day1(input, part).ToString(),
-                2 => day2(input, part).ToString(),
-                3 => day3(input, part).ToString(),
-                4 => day4(input, part).ToString(),
-                5 => day5(input, part).ToString(),
-                6 => day6(input, part).ToString(),
-                7 => day7(input, part).ToString(),
-                8 => day8(input, part).ToString(),
-                9 => day9(input, part).ToString(),
-                10 => day10(input, part).ToString(),
-                11 => day11(input, part).ToString(),
-                12 => day12(input, part).ToString(),
-                13 => day13(input, part).ToString(),
-                14 => day14(input, part).ToString(),
+                1 => day1(input, part),
+                2 => day2(input, part),
+                3 => day3(input, part),
+                4 => day4(input, part),
+                5 => day5(input, part),
+                6 => day6(input, part),
+                7 => day7(input, part),
+                8 => day8(input, part),
+                9 => day9(input, part),
+                10 => day10(input, part),
+                11 => day11(input, part),
+                12 => day12(input, part),
+                13 => day13(input, part),
+                14 => day14(input, part),
+                15 => day15(input, part),
                 _ => throw new ArgumentException("Wrong day number - unimplemented")
             };
             st.Stop();
@@ -39,13 +40,13 @@ namespace AoC18
             Console.WriteLine("Ellapsed : {0}", st.Elapsed.TotalSeconds);
         } 
 
-        static int day1(string input, int part)
+        static string day1(string input, int part)
         {
             var lines = File.ReadAllLines(input).ToList();
             Day01.DeviceCalibrator dc = new();
             dc.ParseInput(lines);
 
-            return dc.Solve(part);
+            return dc.Solve(part).ToString();
         }
 
         static string day2(string input, int part)
@@ -55,38 +56,38 @@ namespace AoC18
             return cs.Solve(lines, part);
         }
 
-        static int day3(string input, int part)
+        static string day3(string input, int part)
         {
             var lines = File.ReadAllLines(input).ToList();
             Day03.PatchFabric fabric = new();
             fabric.ParseInput(lines);
-            return fabric.Solve(part);
+            return fabric.Solve(part).ToString();
         }
 
-        static int day4(string input, int part)
+        static string day4(string input, int part)
         {
             var lines = File.ReadAllLines(input).ToList();
             Day04.GuardWatcher watcher = new();
             watcher.ParseInput(lines);
           
-            return watcher.Solve(part);
+            return watcher.Solve(part).ToString();
         }
 
-        static int day5(string input, int part)
+        static string day5(string input, int part)
         {
             var lines = File.ReadAllLines(input).ToList();
             Day05.PolymerReductor polRed = new();
             polRed.ParseInput(lines);
-            return polRed.Solve(part);
+            return polRed.Solve(part).ToString();
         }
 
-        static int day6(string input, int part)
+        static string day6(string input, int part)
         {
             var lines = File.ReadAllLines(input).ToList();
             Day06.LocationSpace space = new();
             space.ParseInput(lines);
                       
-            return space.Solve(part);
+            return space.Solve(part).ToString();
         }
 
         static string day7(string input, int part)
@@ -98,21 +99,21 @@ namespace AoC18
             return solver.Solve(part);
         }
 
-        static int day8(string input, int part)
+        static string day8(string input, int part)
         {
             var lines = File.ReadAllLines(input).ToList();
             Day08.TreeParser treeParser = new();
             treeParser.ParseInput(lines);
-            return treeParser.Solve(part);
+            return treeParser.Solve(part).ToString();
         }
 
-        static long day9(string input, int part)
+        static string day9(string input, int part)
         {
             var lines = File.ReadAllLines(input).ToList();
             Day09.MarbleGame marbleGame = new();
             marbleGame.ParseInput(lines);
 
-            return marbleGame.Solve(part);
+            return marbleGame.Solve(part).ToString();
         }
 
         static string day10(string input, int part)
@@ -132,12 +133,12 @@ namespace AoC18
             return inspector.Solve(part);
         }
 
-        static long day12(string input, int part)
+        static string day12(string input, int part)
         {
             var lines = File.ReadAllLines(input).ToList();
             Day12.FlowerPot pots = new();
             pots.ParseInput(lines);
-            return pots.Solve(part);
+            return pots.Solve(part).ToString();
         }
 
         static string day13(string input, int part)
@@ -156,6 +157,14 @@ namespace AoC18
             finder.ParseInput(lines);
 
             return finder.Solve(part);
+        }
+
+        static string day15(string input, int part)
+        {
+            var lines = File.ReadAllLines(input).ToList();
+            
+
+            return "";
         }
 
     }
