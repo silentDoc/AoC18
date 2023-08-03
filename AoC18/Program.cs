@@ -8,7 +8,7 @@ namespace AoC18
         {
             int day = 13;
             int part = 1;
-            bool test = !false;
+            bool test = false;
 
             string input = "./Input/day" + day.ToString("00");
             input += (test) ? "_test.txt" : ".txt";
@@ -142,7 +142,10 @@ namespace AoC18
         static string day13(string input, int part)
         {
             var lines = File.ReadAllLines(input).ToList();
-            return "";
+            Day13.MineCartRunner runner = new();
+            runner.ParseInput(lines);
+
+            return runner.Solve(part);
         }
 
     }
