@@ -6,6 +6,7 @@ namespace AoC18.Day13
     {
         public Coord2D currentPosition;
         public Coord2D direction;
+        public bool crashed = false;
         public int lastTurn = 2;   // 0 = left, 1 = straight, 2 = right
 
         public MineCart(Coord2D position, Coord2D direction)
@@ -15,10 +16,11 @@ namespace AoC18.Day13
         }
 
         public Coord2D TurnLeft(Coord2D direction)
-            => direction.y == 0 ? new Coord2D(direction.y, -direction.x) : new Coord2D(direction.y, direction.x);
-        
+            =>  new Coord2D(direction.y, -direction.x);
+
         public Coord2D TurnRight(Coord2D direction)
-            => direction.y == 0 ? new Coord2D(direction.y, direction.x) : new Coord2D(-direction.y, direction.x);
+            =>  new Coord2D(-direction.y, direction.x);
+
 
         public void Move(Dictionary<Coord2D, char> railMap)
         {
@@ -62,30 +64,40 @@ namespace AoC18.Day13
                         var direction = new Coord2D(element == '<' ? -1 : element == '>' ? 1 : 0, 
                                                     element == '^' ? -1 : element == 'v' ? 1 : 0);
 
-
                         MineCarts.Add( new MineCart(position, direction));
-
                         element = element == '<' || element == '>' ? '-' : '|';
                     }
                     RailMap[new Coord2D(col, row)] = element;
                 }
         }
-
-        Coord2D RunCarts()
+      
+        Coord2D RunCarts(int part = 1)
         {
             while (true)
             {
+                MineCarts = MineCarts.OrderBy(c => c.currentPosition.y).ThenBy(c => c.currentPosition.x).ToList();
+
                 foreach (var cart in MineCarts)
                 {
                     cart.Move(RailMap);
                     if (MineCarts.Count(c => c.currentPosition == cart.currentPosition) > 1)
-                        return cart.currentPosition;
+                    {
+                        if (part == 1)
+                            return cart.currentPosition;
+                        else
+                            MineCarts.Where(c => c.currentPosition == cart.currentPosition).ToList()
+                                     .ForEach(c => c.crashed = true);
+                    }
                 }
+
+                MineCarts.RemoveAll(c => c.crashed);
+                
+                if (MineCarts.Count == 1)
+                    return MineCarts[0].currentPosition;
             }
         }
 
-
-        public string Solve(int part =1)
-            => part == 1 ? RunCarts().ToString() : "";
+        public string Solve(int part = 1)
+            => RunCarts(part).ToString();
     }
 }

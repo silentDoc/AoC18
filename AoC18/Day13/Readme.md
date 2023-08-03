@@ -175,3 +175,50 @@ After following their respective paths for a while, the carts eventually crash. 
 ```
 
 In this example, the location of the first crash is  `_7,3_`.
+
+## --- Part Two ---
+
+There isn't much you can do to prevent crashes in this ridiculous system. However, by predicting the crashes, the Elves know where to be in advance and  _instantly remove the two crashing carts_  the moment any crash occurs.
+
+They can proceed like this for a while, but eventually, they're going to run out of carts. It could be useful to figure out where the last cart that  _hasn't_  crashed will end up.
+
+For example:
+
+```
+/>-<\  
+|   |  
+| /<+-\
+| | | v
+\>+</ |
+  |   ^
+  \<->/
+
+/---\  
+|   |  
+| v-+-\
+| | | |
+\-+-/ |
+  |   |
+  ^---^
+
+/---\  
+|   |  
+| /-+-\
+| v | |
+\-+-/ |
+  ^   ^
+  \---/
+
+/---\  
+|   |  
+| /-+-\
+| | | |
+\-+-/ ^
+  |   |
+  \---/
+
+```
+
+After four very expensive crashes, a tick ends with only one cart remaining; its final location is  `_6,4_`.
+
+_What is the location of the last cart_  at the end of the first tick where it is the only cart left?
