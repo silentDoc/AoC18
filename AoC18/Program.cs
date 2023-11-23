@@ -33,6 +33,7 @@ namespace AoC18
                 13 => day13(input, part),
                 14 => day14(input, part),
                 15 => day15(input, part),
+                16 => day16(input, part),
                 _ => throw new ArgumentException("Wrong day number - unimplemented")
             };
             st.Stop();
@@ -163,6 +164,14 @@ namespace AoC18
         {
             var lines = File.ReadAllLines(input).ToList();
             
+
+            return "";
+        }
+
+        static string day16(string input, int part)
+        {
+            var lines = File.ReadAllLines(input).ToList();
+
 
             return "";
         }
