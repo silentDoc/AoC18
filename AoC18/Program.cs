@@ -6,9 +6,9 @@ namespace AoC18
     {
         static void Main(string[] args)
         {
-            int day = 15;
+            int day = 16;
             int part = 1;
-            bool test = !false;
+            bool test = false;
 
             string input = "./Input/day" + day.ToString("00");
             input += (test) ? "_test.txt" : ".txt";
@@ -171,9 +171,10 @@ namespace AoC18
         static string day16(string input, int part)
         {
             var lines = File.ReadAllLines(input).ToList();
+            Day16.OpcodeCracker cracker = new();
+            cracker.ParseInput(lines);
 
-
-            return "";
+            return cracker.Solve(part).ToString();
         }
 
     }
