@@ -69,7 +69,42 @@ namespace AoC18.Day18
             return Map.Values.Count(x => x == CellType.Lumberyard) * Map.Values.Count(x => x == CellType.Tree);
         }
 
+        private int SolvePart2()
+        {
+            Dictionary<long, string> states = new();
+            long iterations = 1000000000;
+            long currentLoop = 0;
+
+            string state = new string(Map.Values.ToList().ToArray());
+            states[0] = state;
+
+            for (long i = 1; i <= iterations; i++)
+            {
+                Map = Evolve();
+                state = new string(Map.Values.ToArray());
+                if (!states.Values.Contains(state))
+                    states[i] = state;
+                else
+                {
+                    currentLoop = i;
+                    break;
+                }
+            }
+
+            long firstOccurrence = states.Keys.First(x => states[x] == state);
+            long loopLength = currentLoop-firstOccurrence;
+            long cycles = (iterations - firstOccurrence) / loopLength;
+            long lastCompletedCycle = firstOccurrence + (cycles * loopLength);
+            long remainder = iterations - lastCompletedCycle;
+
+            for (long i = 0; i < remainder; i++)
+                Map = Evolve();
+
+
+            return Map.Values.Count(x => x == CellType.Lumberyard) * Map.Values.Count(x => x == CellType.Tree);
+        }
+
         public int Solve(int part)
-            => part == 1 ? SolvePart1() : 0;
+            => part == 1 ? SolvePart1() : SolvePart2();
     }
 }
