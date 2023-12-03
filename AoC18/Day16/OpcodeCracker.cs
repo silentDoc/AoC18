@@ -58,7 +58,6 @@ namespace AoC18.Day16
             }
         }
 
-
         int[] runOpCode(int[] before, int[] instruction, string? op)
         {
             int[] after = (int[])before.Clone();
@@ -86,7 +85,6 @@ namespace AoC18.Day16
             return after;
         }
 
-
         bool testOpCode(int[] before, int[] instruction, int[] after, string op)
         {
             int[] result = new int[4];
@@ -101,7 +99,6 @@ namespace AoC18.Day16
 
             return result.SequenceEqual(after);
         }
-
 
         void ResolveOpCodes()
         {
@@ -134,7 +131,6 @@ namespace AoC18.Day16
                 
                 }
             }
-
             possibleOpCodes.Keys.ToList().ForEach(x => resolvedOpCodes[x] = possibleOpCodes[x].First());
         }
 
