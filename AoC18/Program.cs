@@ -6,9 +6,9 @@ namespace AoC18
     {
         static void Main(string[] args)
         {
-            int day = 17;
-            int part = 2;
-            bool test = false;
+            int day = 18;
+            int part = 1;
+            bool test = !false;
 
             string input = "./Input/day" + day.ToString("00");
             input += (test) ? "_test.txt" : ".txt";
@@ -35,6 +35,7 @@ namespace AoC18
                 15 => day15(input, part),
                 16 => day16(input, part),
                 17 => day17(input, part),
+                18 => day18(input, part),
 
                 _ => throw new ArgumentException("Wrong day number - unimplemented")
             };
@@ -186,6 +187,12 @@ namespace AoC18
             waterVeins.ParseInput(lines);
 
             return waterVeins.Solve(part).ToString(); ;
+        }
+
+        static string day18(string input, int part)
+        {
+            var lines = File.ReadAllLines(input).ToList();
+            return "";
         }
 
     }
