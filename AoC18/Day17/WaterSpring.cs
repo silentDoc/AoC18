@@ -117,7 +117,7 @@ namespace AoC18.Day17
                     leaks.Push(right);
         }
 
-        private int SolvePart1()
+        private int FillCavern(int part = 1)
         {
             SetupMap();
             Stack<Coord2D> leaks = new();
@@ -154,7 +154,8 @@ namespace AoC18.Day17
 
             }
             mapFast[500, 0] = Symbols.Origin;
-            var totalWater = mapFast.Cast<char>().ToArray().Count(x => x == Symbols.StillWater || x == Symbols.MovingWater);     // Substract 1 because I treat origin as leak
+            var totalWater = (part == 1) ? mapFast.Cast<char>().ToArray().Count(x => x == Symbols.StillWater || x == Symbols.MovingWater)
+                                         : mapFast.Cast<char>().ToArray().Count(x => x == Symbols.StillWater);
 
             // Count invalid water to remove it
             int invalidWater = 0;
@@ -163,10 +164,10 @@ namespace AoC18.Day17
                     if (mapFast[i, j] == Symbols.StillWater || mapFast[i, j] == Symbols.MovingWater)
                         invalidWater++;
 
-            return totalWater - invalidWater;
+            return (part ==1) ? totalWater - invalidWater : totalWater;     // We do not substract invalid water in part 2 - all invalid water is moving water
         }
 
         public int Solve(int part)
-            => part == 1 ? SolvePart1() : 0;   
+            => FillCavern(part);   
     }
 }
