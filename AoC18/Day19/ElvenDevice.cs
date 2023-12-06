@@ -1,4 +1,6 @@
-﻿namespace AoC18.Day19
+﻿using System.ComponentModel;
+
+namespace AoC18.Day19
 {
     public record DeviceInstruction
     {
@@ -18,11 +20,13 @@
         DeviceInstruction ParseInstruction(string line)
         {
             var instruction = new DeviceInstruction();
+
             var parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             instruction.ins = parts[0];
             instruction.ops[0] = int.Parse(parts[1]);
             instruction.ops[1] = int.Parse(parts[2]);
             instruction.ops[2] = int.Parse(parts[3]);
+
             return instruction;
         }
 
@@ -41,6 +45,7 @@
             var opA = instruction.ops[0];   // Just to reduce verbosity on the switch belo
             var opB = instruction.ops[1];
             var opC = instruction.ops[2];
+
 
             resultRegs[opC] = instructionName switch
             {
@@ -65,11 +70,10 @@
             return resultRegs;
         }
 
-        int SolvePart1()
+        int RunProgram()
         {
             registers = new int[] { 0,0,0,0,0,0};
             int ip = 0;
-            registers[ip] = 0;
 
             while (ip < Program.Count && ip >=0)
             {
@@ -78,11 +82,21 @@
                 ip = registers[ParsedIntPointer];
                 ip++;
             }
-
             return registers[0];
         }
 
+        public int CalcPart2()
+        {
+            // Refer to InputDisassembly.md to see how I got here
+            int sum = 0;
+            for (int i = 1; i <= 10551377; i++)
+                if (10551377 % i == 0)
+                    sum += i;
+
+            return sum;
+        }
+
         public int Solve(int part)
-            => SolvePart1();
+            => part ==1 ? RunProgram() : CalcPart2();
     }
 }
