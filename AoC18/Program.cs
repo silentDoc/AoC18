@@ -37,6 +37,7 @@ namespace AoC18
                 17 => day17(input, part),
                 18 => day18(input, part),
                 19 => day19(input, part),
+                20 => day20(input, part),
 
                 _ => throw new ArgumentException("Wrong day number - unimplemented")
             };
@@ -205,6 +206,13 @@ namespace AoC18
             device.ParseInput(lines);
 
             return device.Solve(part).ToString();
+        }
+
+        static string day20(string input, int part)
+        {
+            var lines = File.ReadAllLines(input).ToList();
+            
+            return "";
         }
 
     }
