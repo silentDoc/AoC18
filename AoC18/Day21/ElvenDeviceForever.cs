@@ -1,4 +1,4 @@
-﻿namespace AoC18.Day19
+﻿namespace AoC18.Day21
 {
     public record DeviceInstruction
     {
@@ -9,7 +9,7 @@
             => ins + " " + ops[0].ToString() + " " + ops[1].ToString() + " " + ops[2].ToString();
     }
 
-    public class ElvenDevice
+    public  class ElvenDeviceForever
     {
         int ParsedIntPointer = -1;
         Dictionary<int, DeviceInstruction> Program = new();
@@ -32,12 +32,12 @@
         {
             ParsedIntPointer = int.Parse(input[0].Replace("#ip ", ""));
             foreach (var c in Enumerable.Range(1, input.Count - 1))
-                Program[c-1] = ParseInstruction(input[c]);
+                Program[c - 1] = ParseInstruction(input[c]);
         }
 
         int[] RunOpCode(DeviceInstruction instruction, int[] regs)
         {
-            int[] resultRegs = (int[]) regs.Clone();
+            int[] resultRegs = (int[])regs.Clone();
             var instructionName = instruction.ins;
 
             var opA = instruction.ops[0];   // Just to reduce verbosity on the switch belo
@@ -70,11 +70,16 @@
 
         int RunProgram()
         {
-            registers = new int[] { 0,0,0,0,0,0};
+            registers = new int[] { 0, 0, 0, 0, 0, 0 };
             int ip = 0;
 
-            while (ip < Program.Count && ip >=0)
+            while (ip < Program.Count && ip >= 0)
             {
+                if (ip == 28)
+                {
+                    return registers[3];
+                }
+
                 registers[ParsedIntPointer] = ip;
                 registers = RunOpCode(Program[ip], registers);
                 ip = registers[ParsedIntPointer];
@@ -95,6 +100,6 @@
         }
 
         public int Solve(int part)
-            => part ==1 ? RunProgram() : CalcPart2();
+            => part == 1 ? RunProgram() : CalcPart2();
     }
 }
