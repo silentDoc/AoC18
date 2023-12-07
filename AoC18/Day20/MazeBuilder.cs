@@ -17,8 +17,6 @@ namespace AoC18.Day20
             if (!openAdjacentRooms.Contains(adjacentRoom))
                 openAdjacentRooms.Add(adjacentRoom);
         }
-
-
     }
 
 
@@ -54,7 +52,6 @@ namespace AoC18.Day20
         int ShortestPath(Coord2D start, Coord2D end, int initial_cost = 0)
         {
             // I leave it here in case I need it later
-
             Queue<(Coord2D pos, int cost)> priorityQueue = new();
             HashSet<(Coord2D pos, int cost)> visited = new();
             priorityQueue.Enqueue((start, initial_cost));
@@ -142,7 +139,7 @@ namespace AoC18.Day20
             }
         }
 
-        int SolveMaze()
+        int SolveMaze(int part)
         {
             // Part 1 - Build the maze
             var startPos = new Coord2D(0, 0);
@@ -162,11 +159,12 @@ namespace AoC18.Day20
 
             TraverseMaze(new List<MazeRoom> { start }, 1);
             
-            return Maze.Max(x => x.Steps);
+            return part == 1 ? Maze.Max(x => x.Steps)
+                             : Maze.Count(x => x.Steps>=1000);
         }
 
         public int Solve(int part = 1)
-            => part == 1 ? SolveMaze() : 0;
+            => SolveMaze(part);
 
     }
 }
