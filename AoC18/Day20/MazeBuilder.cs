@@ -5,20 +5,19 @@ namespace AoC18.Day20
     class MazeRoom
     {
         public Coord2D position = new(0, 0);
-        public List<Coord2D> openAdjacentRooms = new List<Coord2D>();
+        public List<MazeRoom> openAdjacentRooms = new List<MazeRoom>();
 
         public MazeRoom(Coord2D pos)
             => position = pos;
 
         public int Steps = 9999999;
 
-        public void AddAdjacent(Coord2D adjacentRoom)
+        public void AddAdjacent(MazeRoom adjacentRoom)
         {
             if (!openAdjacentRooms.Contains(adjacentRoom))
                 openAdjacentRooms.Add(adjacentRoom);
         }
     }
-
 
     class MazeBuilder
     {
@@ -33,7 +32,7 @@ namespace AoC18.Day20
         public void ParseInput(List<string> lines)
             => MazeRegex = lines[0];
 
-        void UpdateRoom(Coord2D newRoom, Coord2D adjacent)
+        void UpdateRoom(Coord2D newRoom, MazeRoom adjacent)
         {
             var nRoom = Maze.FirstOrDefault(x => x.position == newRoom);
             if (nRoom == null)
@@ -42,53 +41,11 @@ namespace AoC18.Day20
                 Maze.Add(nRoom);
             }
             nRoom.AddAdjacent(adjacent);
-            var aRoom = Maze.First(x => x.position == adjacent);
-            aRoom.AddAdjacent(newRoom);
+            adjacent.AddAdjacent(nRoom);
         }
 
         MazeRoom GetRoom(Coord2D pos)
             => Maze.First(x => x.position == pos);
-
-        int ShortestPath(Coord2D start, Coord2D end, int initial_cost = 0)
-        {
-            // I leave it here in case I need it later
-            Queue<(Coord2D pos, int cost)> priorityQueue = new();
-            HashSet<(Coord2D pos, int cost)> visited = new();
-            priorityQueue.Enqueue((start, initial_cost));
-
-            while (priorityQueue.Count > 0)
-            {
-                var item = priorityQueue.Dequeue();
-                var room = item.pos;
-                var currentCost = item.cost;
-
-                if (room == end)
-                    return currentCost;
-
-                var newCost = currentCost + 1;
-                var candidates = GetRoom(room).openAdjacentRooms;
-
-                foreach (var candidate in candidates)
-                    if (visited.Add((candidate, newCost)))
-                        priorityQueue.Enqueue((candidate, newCost));
-            }
-
-            return -1;  // Not found
-        }
-
-        void TraverseMaze(List<MazeRoom> rooms, int newCost)
-        {
-            if(rooms.Count == 0) 
-                return;
-
-            var adjacentSet = rooms.SelectMany(x => x.openAdjacentRooms);
-            var adjacentRoomSet = Maze.Where(r => r.Steps == 9999999 && adjacentSet.Contains(r.position)).ToList();
-            foreach (var room in adjacentRoomSet)
-                room.Steps = newCost;
-
-            TraverseMaze(adjacentRoomSet, newCost+1);
-        }
-
 
         void ParseSubstring(int currentChar, int endChar, MazeRoom currentRoom)
         {
@@ -129,7 +86,7 @@ namespace AoC18.Day20
                         _ => throw new Exception("Unexpected symol" + MazeRegex[charPtr].ToString())
                     };
 
-                    UpdateRoom(nextPos, currentPos);
+                    UpdateRoom(nextPos, GetRoom(currentPos));
                     currentPos = nextPos;
                 }
                 else
@@ -137,6 +94,19 @@ namespace AoC18.Day20
 
                 charPtr++;
             }
+        }
+
+        void TraverseMaze(List<MazeRoom> rooms, int newCost)
+        {
+            if (rooms.Count == 0)
+                return;
+
+            var adjacentSet = rooms.SelectMany(x => x.openAdjacentRooms).Where(r => r.Steps == 9999999).ToList() ;
+
+            foreach (var room in adjacentSet)
+                room.Steps = newCost;
+
+            TraverseMaze(adjacentSet, newCost + 1);
         }
 
         int SolveMaze(int part)
@@ -150,13 +120,7 @@ namespace AoC18.Day20
             int endChar = MazeRegex.Length - 2;
             ParseSubstring(currentChar, endChar, start);
            
-            // First attempt - go room by room and get shortest path - very inefficient, takes a lot (10000 rooms)
-            // Better to Traverse all the Maze
-            // Find the shortest path for all rooms 
-            /*var allRooms = Maze.Select(x => x.position).ToList();
-            var allCosts = allRooms.Select(x => ShortestPath(startPos, x)).ToList();
-            return allCosts.Max();*/
-
+            // Part 2  - Traverse and yield results
             TraverseMaze(new List<MazeRoom> { start }, 1);
             
             return part == 1 ? Maze.Max(x => x.Steps)
@@ -165,6 +129,5 @@ namespace AoC18.Day20
 
         public int Solve(int part = 1)
             => SolveMaze(part);
-
     }
 }
