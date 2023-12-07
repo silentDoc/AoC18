@@ -6,8 +6,8 @@ namespace AoC18
     {
         static void Main(string[] args)
         {
-            int day = 19;
-            int part = 2;
+            int day = 20;
+            int part = 1;
             bool test = false;
 
             string input = "./Input/day" + day.ToString("00");
@@ -211,8 +211,10 @@ namespace AoC18
         static string day20(string input, int part)
         {
             var lines = File.ReadAllLines(input).ToList();
+            Day20.MazeBuilder builder = new();
+            builder.ParseInput(lines);
             
-            return "";
+            return builder.Solve(part).ToString();
         }
 
     }
