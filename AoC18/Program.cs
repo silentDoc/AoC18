@@ -8,7 +8,7 @@ namespace AoC18
         {
             int day = 22;
             int part = 1;
-            bool test = !false;
+            bool test = false;
 
             string input = "./Input/day" + day.ToString("00");
             input += (test) ? "_test.txt" : ".txt";
@@ -230,8 +230,10 @@ namespace AoC18
         static string day22(string input, int part)
         {
             var lines = File.ReadAllLines(input).ToList();
+            Day22.MazeRiskAnalyzer mazer = new();
+            mazer.ParseInput(lines);
 
-            return "";
+            return mazer.Solve(part).ToString();
         }
 
     }
