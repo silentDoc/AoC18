@@ -47,4 +47,97 @@ Later on `r[1]` will be annotated with `r<1>` instead to signalize that it is bo
 ## Conclusion
 
 *Part 1* 
-There is only one check done with R[0] (ins 28) - I will run the program and print the value of r[3] in that given moment
+There is only one check done with R[0] (ins 28) - I will run the program until we land on instruction 28 and print the value of r[3] in that given moment
+
+*Part 2* 
+We need to reverse engineer the input, what is happening is something like this :
+
+
+``` csharp
+ISet<ulong> seenTargetRegisterValues
+ulong targetRegister = 0;                                         // Target register is r[3], the one checked against r[0]
+while (true)
+{
+  ulong tempRegister = targetRegister | 65536;                    // Line 6 - result in r[2]
+  targetRegister = 1505483;                                       // Target register reset value, line 7
+  while (true)
+  {
+    tempRegister = (tempRegister & 255);                          // Line 8 - result in r[4]
+    targetRegister = targetRegister + tempRegister;               // Line 9
+    targetRegister = targetRegister & 16777215;                   // Line 10
+    targetRegister = targetRegister * 65899;                      // Line 11
+    targetRegister = targetRegister & 16777215;                   // Line 12
+    
+    if (256 > tempRegister)                                       // Lines 13, 14, 15, 16 implement this if. True -> line 28, false 24
+    {
+      
+      bool duplicate = !seenTargetRegisterValues.Add(targetRegister);
+      if (duplicate)
+      {
+        yield break;
+      }
+      yield return targetRegister;
+      break;
+    }
+    else
+    {
+        r4 = 0;
+
+        r5 +=4;                                                  // Line 18 - This translates to a while - whlile (r5<=r2)
+        r5*=256;
+        if(r5>r2)                                               // Lines 20,21,22,23 implement this if. True --> line 26, False --> line 
+        {
+            r4+=4
+            Jump to Line 18                                      // End of while loop
+        }
+
+        tempRegister = r4;                                       // 26 We jump back to beginning (tempRegister is r2)
+        jmp to line 8                                            // We go back to the beginning of While (true)
+    }
+  }
+}
+```
+
+This translates to what we are looking for in Part 2 - in C#. The key optimization that saves a lot of time is to see that the loo from lines 18 to 25 can be replaced by `r4 / 256` . Both the brute force (around 450 secs) implementation of Part 2 and the reverse engineered version (300 millis) are implemented in the solution. 
+
+``` csharp
+public int CalcPart2()
+{
+    int B, E;
+    int prev = -1;
+    var seen = new HashSet<int>();
+
+    B = 65536;
+    E = 1505483;
+
+    while (true)
+    {
+        E += B & 255;
+        E &= 16777215;
+        E *= 65899;
+        E &= 16777215;
+
+        if (B < 256)
+        {
+            // Find the last new value of E during instruction 28 before it cycles
+            // That will be the last hit, so setting r[0] to its value results
+            // in the most instructions among all possible terminating values.
+            if (!seen.Add(E))
+            {
+                return prev;
+            }
+            else
+            {
+                prev = E;
+            }
+            B = E | 65536;
+            E = 1505483;
+        }
+        else
+        {
+            B = (int) Math.Floor((decimal) (B / 256));
+        }
+    }
+}
+``` 
+

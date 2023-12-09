@@ -1,4 +1,6 @@
-﻿namespace AoC18.Day21
+﻿using System.Collections.Generic;
+
+namespace AoC18.Day21
 {
     public record DeviceInstruction
     {
@@ -68,16 +70,26 @@
             return resultRegs;
         }
 
-        int RunProgram()
+        int RunProgram(int part =1)
         {
+            HashSet<int> states = new();
+            int last = 0;
+
             registers = new int[] { 0, 0, 0, 0, 0, 0 };
             int ip = 0;
+            long iterations = 0;
 
             while (ip < Program.Count && ip >= 0)
             {
-                if (ip == 28)
-                {
+                iterations++;
+                if (ip == 28 && part == 1)
                     return registers[3];
+                else if (ip == 28)
+                {
+                    if (!states.Add(registers[3]))
+                        return last;
+                    else
+                        last = registers[3];
                 }
 
                 registers[ParsedIntPointer] = ip;
@@ -88,18 +100,38 @@
             return registers[0];
         }
 
-        public int CalcPart2()
+        public int ReverseEngineeredPart2()
         {
-            // Refer to InputDisassembly.md to see how I got here
-            int sum = 0;
-            for (int i = 1; i <= 10551377; i++)
-                if (10551377 % i == 0)
-                    sum += i;
+            int tempValue, targetValue;
+            int prev = -1;
+            var seen = new HashSet<int>();
 
-            return sum;
+            tempValue = 65536;
+            targetValue = 1505483;
+
+            while (true)
+            {
+                targetValue += tempValue & 255;
+                targetValue &= 16777215;
+                targetValue *= 65899;
+                targetValue &= 16777215;
+
+                if (tempValue < 256)
+                {
+                    if (!seen.Add(targetValue))
+                        return prev;
+                    else
+                        prev = targetValue;
+
+                    tempValue = targetValue | 65536;
+                    targetValue = 1505483;
+                }
+                else
+                    tempValue = (int) Math.Floor((decimal) (tempValue / 256));
+            }
         }
 
         public int Solve(int part)
-            => part == 1 ? RunProgram() : CalcPart2();
+            => part == 1 ? RunProgram(part) : ReverseEngineeredPart2();
     }
 }
