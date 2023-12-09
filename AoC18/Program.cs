@@ -6,9 +6,9 @@ namespace AoC18
     {
         static void Main(string[] args)
         {
-            int day = 21;
-            int part = 2;
-            bool test = false;
+            int day = 22;
+            int part = 1;
+            bool test = !false;
 
             string input = "./Input/day" + day.ToString("00");
             input += (test) ? "_test.txt" : ".txt";
@@ -39,11 +39,12 @@ namespace AoC18
                 19 => day19(input, part),
                 20 => day20(input, part),
                 21 => day21(input, part),
+                22 => day22(input, part),
                 _ => throw new ArgumentException("Wrong day number - unimplemented")
             };
             st.Stop();
             Console.WriteLine("Result : {0}", result);
-            Console.WriteLine("Ellapsed : {0}", st.Elapsed.TotalSeconds);
+            Console.WriteLine("Elapsed : {0}", st.Elapsed.TotalSeconds);
         } 
 
         static string day1(string input, int part)
@@ -224,6 +225,13 @@ namespace AoC18
             device.ParseInput(lines);
 
             return device.Solve(part).ToString();
+        }
+
+        static string day22(string input, int part)
+        {
+            var lines = File.ReadAllLines(input).ToList();
+
+            return "";
         }
 
     }
