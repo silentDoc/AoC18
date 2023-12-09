@@ -47,6 +47,15 @@
             z = this.z;
         }
 
+        public IEnumerable<Coord2D> GetNeighborsXY()
+        {
+            // Up - Right - Down - Left
+            yield return new Coord2D(x, y - 1);
+            yield return new Coord2D(x + 1, y);
+            yield return new Coord2D(x, y + 1);
+            yield return new Coord2D(x - 1, y);
+        }
+
         public bool Equals(Coord3D? other)
             => other is null ? false : other.x == x && other.y == y && other.z == z;
 
