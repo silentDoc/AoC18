@@ -40,6 +40,7 @@ namespace AoC18
                 20 => day20(input, part),
                 21 => day21(input, part),
                 22 => day22(input, part),
+                23 => day23(input, part),
                 _ => throw new ArgumentException("Wrong day number - unimplemented")
             };
             st.Stop();
@@ -234,6 +235,12 @@ namespace AoC18
             mazer.ParseInput(lines);
 
             return mazer.Solve(part).ToString();
+        }
+        static string day23(string input, int part)
+        {
+            var lines = File.ReadAllLines(input).ToList();
+
+            return "";
         }
 
     }
