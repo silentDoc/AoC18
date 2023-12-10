@@ -6,9 +6,9 @@ namespace AoC18
     {
         static void Main(string[] args)
         {
-            int day = 22;
-            int part = 2;
-            bool test = !false;
+            int day = 23;
+            int part = 1;
+            bool test = false;
 
             string input = "./Input/day" + day.ToString("00");
             input += (test) ? "_test.txt" : ".txt";
@@ -239,8 +239,9 @@ namespace AoC18
         static string day23(string input, int part)
         {
             var lines = File.ReadAllLines(input).ToList();
-
-            return "";
+            Day23.EmergencyTeleporter teleporter = new();
+            teleporter.ParseInput(lines);
+            return teleporter.Solve(part).ToString();
         }
 
     }
