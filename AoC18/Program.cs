@@ -6,9 +6,9 @@ namespace AoC18
     {
         static void Main(string[] args)
         {
-            int day = 23;
-            int part = 2;
-            bool test = false;
+            int day = 24;
+            int part = 1;
+            bool test = !false;
 
             string input = "./Input/day" + day.ToString("00");
             input += (test) ? "_test.txt" : ".txt";
@@ -41,6 +41,7 @@ namespace AoC18
                 21 => day21(input, part),
                 22 => day22(input, part),
                 23 => day23(input, part),
+                24 => day24(input, part),
                 _ => throw new ArgumentException("Wrong day number - unimplemented")
             };
             st.Stop();
@@ -242,6 +243,12 @@ namespace AoC18
             Day23.EmergencyTeleporter teleporter = new();
             teleporter.ParseInput(lines);
             return teleporter.Solve(part).ToString();
+        }
+
+        static string day24(string input, int part)
+        {
+            var lines = File.ReadAllLines(input).ToList();
+            return "";
         }
 
     }
