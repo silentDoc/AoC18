@@ -8,7 +8,7 @@
 5013 units each with 9768 hit points with an attack that does 15 cold damage at initiative 14
 1143 units each with 1822 hit points (weak to radiation) with an attack that does 15 fire damage at initiative 18
 136 units each with 6830 hit points (weak to radiation) with an attack that does 420 slashing damage at initiative 7
-665 units each with 7973 hit points (weak to bludgeoning; immune to slashing) with an attack that does 119 fire damage at initiative 11
+665 units each with 7973 hit points (immune to slashing; weak to bludgeoning) with an attack that does 119 fire damage at initiative 11
 
 Infection:
 515 units each with 8712 hit points (immune to radiation; weak to slashing, fire) with an attack that does 30 cold damage at initiative 1
