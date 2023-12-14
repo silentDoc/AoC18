@@ -22,6 +22,22 @@ namespace AoC18.Day24
             => Weakneses.Contains(type);
         public bool ImmuneTo(string type)
             => Immunities.Contains(type);
+
+        public ArmyGroup Clone()
+        {
+            ArmyGroup clone = new ArmyGroup();
+            clone.IsInfection = IsInfection;
+            clone.Id = Id;
+            clone.Number = Number;
+            clone.CurrentNumber = CurrentNumber;
+            clone.HitPoints = HitPoints;
+            clone.Damage = Damage;
+            clone.DamageType = DamageType;
+            clone.Initiative = Initiative;
+            clone.Weakneses.AddRange(Weakneses);
+            clone.Immunities.AddRange(Immunities);
+            return clone;
+        }
     }
 
     internal class BloodBattle
@@ -105,22 +121,73 @@ namespace AoC18.Day24
             }
         }
 
+        private bool CheckBoost(int boost)
+        {
+            List<ArmyGroup> backup = new();
+            foreach (var army in Armies)
+                backup.Add(army.Clone());
+
+            foreach (var army in Armies.Where(x => !x.IsInfection).ToList())
+                army.Damage += boost;
+
+            int battleResult = Fight();
+
+            bool ImmuneWins = (battleResult != -1) &&       // Stalemate
+                              Armies.Any(x => !x.IsInfection && x.CurrentNumber > 0);
+
+            var units = Armies.Where(x => !x.IsInfection).Sum(x => x.CurrentNumber);
+
+            if(ImmuneWins)
+                Console.WriteLine(boost.ToString() + " , units: " + units.ToString());
+            else
+                Console.WriteLine("Infection wins");
+
+            Armies.Clear();
+            foreach (var army in backup)
+                Armies.Add(army.Clone());
+            return ImmuneWins;
+        }
+
+        private int FindSmallerBoost()  // Binary search
+        {
+            int lowerBoost = 0;
+            int upperBoost = 10000;
+
+            while (lowerBoost < upperBoost - 1)
+            {
+                Console.WriteLine(lowerBoost.ToString() + " - " + upperBoost.ToString());
+
+                int midBoost = (upperBoost + lowerBoost)/2;
+                if (CheckBoost(midBoost))
+                    upperBoost = midBoost;
+                else
+                    lowerBoost = midBoost;
+            }
+            return upperBoost;
+        }
+
         public int Fight()
         {
-            var immuneGuys = Armies.Count(x => !x.IsInfection && x.CurrentNumber > 0);
-            var infectGuys = Armies.Count(x => x.IsInfection && x.CurrentNumber > 0);
+            var activeImmuneArmies = Armies.Count(x => !x.IsInfection && x.CurrentNumber > 0);
+            var activeInfectionArmies = Armies.Count(x => x.IsInfection && x.CurrentNumber > 0);
 
-            while (immuneGuys > 0 && infectGuys > 0)
+            var lastTurnCount = -1;
+
+            while (activeImmuneArmies > 0 && activeInfectionArmies > 0)
             {
                 CombatTurn();
-                immuneGuys = Armies.Count(x => !x.IsInfection && x.CurrentNumber > 0);
-                infectGuys = Armies.Count(x => x.IsInfection && x.CurrentNumber > 0);
+                activeImmuneArmies = Armies.Count(x => !x.IsInfection && x.CurrentNumber > 0);
+                activeInfectionArmies = Armies.Count(x => x.IsInfection && x.CurrentNumber > 0);
+                var currentCount = Armies.Sum(x => x.CurrentNumber);
+                if (lastTurnCount == currentCount)
+                    return -1;
+                lastTurnCount = currentCount;
             }
 
             return Armies.Sum(x => x.CurrentNumber);
         }
 
         public int Solve(int part)
-            => Fight();
+            => part == 1 ? Fight() : FindSmallerBoost();
     }
 }
