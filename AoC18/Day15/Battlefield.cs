@@ -39,6 +39,13 @@ namespace AoC18.Day15
                     .ThenBy(u => u.Position.y).ThenBy(u => u.Position.x)
                     .ToList();
 
+        public Unit Clone()
+        {
+            Unit newUnit = new(this.Position, this.Type, this.Id);
+            newUnit.Health = this.Health;
+            newUnit.Power = this.Power;
+            return newUnit;
+        }
     }
 
     class Battlefield
@@ -200,7 +207,7 @@ namespace AoC18.Day15
                 aliveElves = Units.Count(u => u.Type == 'E' && u.Alive) > 0;
                 rounds++;
             }
-            PrintMap(rounds);
+            //PrintMap(rounds);
             return Units.Where(x => x.Alive).Sum(x => x.Health) * (rounds);
         }
 
@@ -231,7 +238,6 @@ namespace AoC18.Day15
             Console.ResetColor();
         }
         
-
         void PrintMap(int Round = 0)
         {
             Console.WriteLine("Round = " + Round.ToString());
@@ -258,7 +264,54 @@ namespace AoC18.Day15
             Console.WriteLine();
         }
 
+        int SolvePart2()
+        {
+            List<Unit> UnitsBackup = new();
+            Units.ForEach(x => UnitsBackup.Add(x.Clone()));
+            
+            int targetAliveElves = Units.Count(x => x.Type == 'E');
+            int losses = -1;
+            var boost = 0;
+            var skipFwd = 5;
+            var retVal = -1;
+
+            while (losses != 0)
+            {
+                Units.Clear();
+                UnitsBackup.ForEach(x => Units.Add(x.Clone()));
+                boost += skipFwd;
+                foreach (var unit in Units.Where(u => u.Type == 'E'))
+                    unit.Power += boost;
+
+                var result = FindOutcome();
+                losses = targetAliveElves - Units.Count(x => x.Type == 'E' && x.Alive);
+                
+                if (losses == 0)
+                    retVal = result;
+
+                Console.WriteLine("Boost : " + boost.ToString() + " - Losses : " + losses.ToString() + " - Outcome : " + result.ToString());
+            }
+
+            while (losses == 0)
+            {
+                Units.Clear();
+                UnitsBackup.ForEach(x => Units.Add(x.Clone()));
+                boost--;
+                foreach (var unit in Units.Where(u => u.Type == 'E'))
+                    unit.Power += boost;
+
+                var result = FindOutcome();
+                losses = targetAliveElves - Units.Count(x => x.Type == 'E' && x.Alive);
+
+                if (losses == 0)
+                    retVal = result;
+
+                Console.WriteLine("Boost : " + boost.ToString() + " - Losses : " + losses.ToString() + " - Outcome : " + result.ToString());
+            }
+            return retVal;
+        }
+
         public string Solve(int part)
-            => (part == 1) ? FindOutcome().ToString() : "";
+            => (part == 1) ? FindOutcome().ToString() : SolvePart2().ToString();
     }
 }
